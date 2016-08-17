@@ -1,3 +1,4 @@
 #!/bin/bash
 sudo apt-get install -y ansible
-ansible-playbook /project/vagrant/ansible/vagrant.yml -i /project/vagrant/ansible/inventory
+chmod -x /vagrant/vagrant/ansible/inventory
+ansible-playbook /vagrant/vagrant/ansible/vagrant.yml -i /vagrant/vagrant/ansible/inventory

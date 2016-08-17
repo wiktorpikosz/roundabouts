@@ -5,3 +5,4 @@ public/*
 src/roundabouts.js
 deploy.sh
 src/cli_*
+/nbproject/private/
