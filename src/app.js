@@ -2,6 +2,7 @@ import {RoundaboutDrawer} from './GUI/RoundaboutDrawer.js';
 import CellsDrawer from './GUI/CellsDrawer.js';
 import Translator from './GUI/Translator.js';
 import UnitConverter from './GUI/UnitConverter.js';
+import Menu from './GUI/Menu.js';
 import {roundaboutBukowe, roundaboutThreeLanes} from './Simulation/Specification/RoundaboutSpecifications.js';
 import {CellsMap} from './Simulation/CellsMap.js';
 import CellularAutomata from './Simulation/CellularAutomata.js';
@@ -57,6 +58,7 @@ let drivingRules = DrivingRules.newRules5(
     roundaboutBukowe.lanesCount(),
     roundaboutBukowe.adherentLanesCount()
 );
+
 let cellularAutomata = new CellularAutomata(
     roundaboutBukoweCellsMap,
     cellsNeighbours,
@@ -65,13 +67,10 @@ let cellularAutomata = new CellularAutomata(
     0.5
 );
 
+let menu = new Menu(
+    roundaboutDrawer,
+    cellularAutomata
+);
+
 roundaboutDrawer.draw();
-function nextIteration() {
-    cellularAutomata.nextIteration();
-    if (cellularAutomata.hasFinished()) {
-        console.log("Finished simulation, ", cellularAutomata.iterations());
-        return;
-    }
-    setTimeout(()=> {nextIteration();}, 700);
-};
-nextIteration();
+menu.init();

@@ -6,15 +6,51 @@
     <title>Roundabouts Traffic Simulation</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div id="canvas" class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
-
+            <div id="canvas" class="col-xs-10 col-sm-10 col-md-8 col-lg-8">
             </div>
-            <div id="menu" class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
-                <input type="checkbox" id="debug_on" /><label for="debug_on">Draw cells</label>
+            <div id="menu" class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#main" aria-controls="main" role="tab" data-toggle="tab">Main</a></li>
+                    <li role="presentation"><a href="#vehicle" aria-controls="vehicle" role="tab" data-toggle="tab">Vehicle</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="main">
+                        <h4>Main Configuration</h4>
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><label for="debug_on">Draw cells:</label></td>
+                                <td><input type="checkbox" id="debug_on" /></td>
+                            </tr>
+                            <tr>
+                                <td>Action:</td>
+                                <td>
+                                    <button class="btn btn-default" id="start">Start</button>
+                                    <button class="btn btn-default" id="pause">Pause</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Speed:</td>
+                                <td>
+                                    <select id="speed">
+                                        <option value="200">0.2</option>
+                                        <option value="500">0.5</option>
+                                        <option value="700" selected>0.7</option>
+                                        <option value="1000">1</option>
+                                        <option value="1500">1.5</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="vehicle">
+                        <h4>Vehicles</h4>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

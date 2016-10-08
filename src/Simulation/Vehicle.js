@@ -1,6 +1,6 @@
 class Vehicle {
 
-    constructor(lengthCells, maxSpeed, maxSpeedWhenTurning, drivingRules) {
+    constructor(lengthCells, maxSpeed, maxSpeedWhenTurning, drivingRules, name) {
         this._lengthCells = lengthCells;
         this._currentSpeed = 1;
         this._maxSpeed = maxSpeed;
@@ -8,6 +8,7 @@ class Vehicle {
         this._currentCells = [];
         this._maxSpeedWhenTurning = maxSpeedWhenTurning;
         this._drivingRules = drivingRules;
+        this._name = name
     }
 
     maxSpeedWhenTurning() {
@@ -155,6 +156,10 @@ class Vehicle {
         return this.currentCells().some(cell => {
             return cell.parentLane().isEntranceLane();
         });
+    }
+
+    getName(){
+        return this._name;
     }
 
     _accelerate(by=1) {

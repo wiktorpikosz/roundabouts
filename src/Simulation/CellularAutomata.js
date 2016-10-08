@@ -111,6 +111,14 @@ class CellularAutomata {
             }
         });
     }
+
+    getVehicle(id){
+        for (var i=0; i<this._vehicles.length; i++) {
+            if(this._vehicles[i].id() == id){
+                return this._vehicles[i];
+            }
+        }
+    }
 }
 
 export default CellularAutomata;

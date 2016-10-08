@@ -4,7 +4,7 @@ class CellsDrawer {
         this._unitConverter = unitConverter;
         this._roundaboutSpecification = roundaboutSpecification;
         this._two = two;
-        this._centerPoint =  {
+        this._centerPoint = {
             x: this._two.width / 2,
             y: this._two.height / 2
         };
@@ -34,7 +34,7 @@ class CellsDrawer {
     }
 
     _drawRoundaboutGrid() {
-        var cellWidthPx =  this._unitConverter.metersAsPixels(this._roundaboutSpecification.laneWidth());
+        var cellWidthPx = this._unitConverter.metersAsPixels(this._roundaboutSpecification.laneWidth());
 
         this._roundaboutSpecification.innerRoadLanes().forEach(lane => {
             var laneRadiusPx = this._unitConverter.metersAsPixels(this._roundaboutSpecification.laneRadius(lane.id()));
@@ -51,6 +51,9 @@ class CellsDrawer {
                     cellWidthPx
                 );
                 singleCell.rotation = Math.atan2(-y, -x) + Math.PI / 2;
+                // add id vehicle to call
+                this.vehicleId(singleCell, cell);
+
                 this._drawStrokeIfDebug(singleCell);
                 this._cellFillColor(cell, singleCell);
                 this._drawnCells.push(singleCell);
@@ -75,6 +78,7 @@ class CellsDrawer {
             cellElement.noStroke();
         }
     }
+
     _drawAdherentRoadsGrid() {
         this._roundaboutSpecification.adherentRoads().forEach(road => {
             this._translator.translateTo(
@@ -99,28 +103,41 @@ class CellsDrawer {
             this._roundaboutSpecification.adherentRoadWidth() / adherentLanesCount
         );
 
-       road.allLanes().forEach((lane, i) => {
-           var cells = this._cellsMap.cellsOnLane(lane.id());
-           if (lane.isExit()) {
-               cells = cells.slice(0).reverse();
-           }
+        road.allLanes().forEach((lane, i) => {
+            var cells = this._cellsMap.cellsOnLane(lane.id());
+            if (lane.isExit()) {
+                cells = cells.slice(0).reverse();
+            }
 
-           cells.forEach((cell, j) => {
-               var singleCell = this._two.makeRectangle(
-                   - roadWidthPx / adherentLanesCount + (i / adherentLanesCount) * roadWidthPx - cellWidthPx / 2,
-                   roadLengthPx / 2 - cellLengthPx / 2 - j * cellLengthPx,
-                   cellWidthPx,
-                   cellLengthPx
-               );
-               this._drawStrokeIfDebug(singleCell);
-               this._cellFillColor(cell, singleCell);
-               cellsToGroup.push(singleCell);
-           });
-       });
+            cells.forEach((cell, j) => {
+                var singleCell = this._two.makeRectangle(
+                    -roadWidthPx / adherentLanesCount + (i / adherentLanesCount) * roadWidthPx - cellWidthPx / 2,
+                    roadLengthPx / 2 - cellLengthPx / 2 - j * cellLengthPx,
+                    cellWidthPx,
+                    cellLengthPx
+                );
+
+                // add id vehicle to call
+                this.vehicleId(singleCell, cell);
+
+                this._drawStrokeIfDebug(singleCell);
+                this._cellFillColor(cell, singleCell);
+                cellsToGroup.push(singleCell);
+            });
+        });
 
         var groupedCells = this._two.makeGroup(cellsToGroup);
         this._drawnCells.push(groupedCells);
         return groupedCells;
+    }
+
+    vehicleId(singleCell, cell){
+        this._two.update();
+        var path = singleCell._renderer.elem;
+
+        if(!cell.isEmpty()) {
+            path.setAttribute('id-vehicle', cell.vehicle().id());
+        }
     }
 }
 

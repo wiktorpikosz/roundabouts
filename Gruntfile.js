@@ -23,7 +23,9 @@ module.exports = function(grunt) {
                     // Copy HTMLs
                     {expand: true, flatten: true, src: ["src/GUI/**/*.html"], dest: "public/", filter: 'isFile'},
                     // Copy roundabouts.js build file - the whole application without external libraries dependencies
-                    {expand: true, flatten: true, src: ["src/roundabouts.js"], dest: "public/js/", filter: 'isFile'}
+                    {expand: true, flatten: true, src: ["src/roundabouts.js"], dest: "public/js/", filter: 'isFile'},
+                    //Copy CSS
+                    {expand: true, flatten: true, src: ["src/GUI/**/*.css"], dest: "public/css/", filter: 'isFile'}
                 ]
             }
         },
@@ -38,6 +40,10 @@ module.exports = function(grunt) {
             },
             html: {
                 files: "src/**/*.html",
+                tasks: ["build"]
+            },
+            css: {
+                files: "src/**/*.css",
                 tasks: ["build"]
             }
         },
