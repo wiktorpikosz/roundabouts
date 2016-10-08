@@ -31,48 +31,79 @@ class Menu {
         var buttonPause = document.getElementById('pause');
         var selectSpeed = document.getElementById('speed');
 
+        var speed = {
+            'Car': document.getElementById('car-speed'),
+            'Motorcycle': document.getElementById('motocycle-speed'),
+            'Van': document.getElementById('van-speed'),
+            'MiniBus': document.getElementById('minibus-speed'),
+            'Bus': document.getElementById('bus-speed'),
+            'Truck': document.getElementById('truck-speed')
+        };
 
         buttonStart.addEventListener('click', this.clickStart.bind(this));
         buttonPause.addEventListener('click', this.clickPause.bind(this));
         selectSpeed.addEventListener('change', this.selectSpeed.bind(this, selectSpeed));
+        this.eventSpeedVehicle(speed);
 
     }
 
-    clickStart(){
-        if(!this._start) {
+    clickStart() {
+        if (!this._start) {
             this._start = true;
             this.nextIteration();
-        } else if(this._start && this._pause) {
+        } else if (this._start && this._pause) {
             this._pause = false;
             this.nextIteration();
         }
     }
 
-    clickPause(){
+    clickPause() {
         this._pause = true;
     }
 
-    selectSpeed(e, s){
+    selectSpeed(e, s) {
         var speed = e.value;
         this._speed = speed;
     }
 
-    clickVehicle(e, s){
+    clickVehicle(e, s) {
         var id = e.getAttribute('id-vehicle');
-        if(id) {
+        if (id) {
             var vehicle = this._cellularAutomata.getVehicle(id);
 
             console.log(vehicle);
         }
     }
 
-    eventVehicle(){
+    eventVehicle() {
         var vehicle = document.getElementsByTagName('path');
         var vehicle_length = vehicle.length;
 
-        for(var i = 0; i < vehicle_length; i++) {
+        for (var i = 0; i < vehicle_length; i++) {
             vehicle[i].addEventListener('click', this.clickVehicle.bind(this, vehicle[i]));
         }
+    }
+
+    eventSpeedVehicle(speedVehicle) {
+        var keys = Object.keys(speedVehicle);
+        var keys_length = keys.length;
+
+        for (var i = 0; i < keys_length; i++) {
+            var key = keys[i];
+            speedVehicle[key].addEventListener('change', this.changeSpeedVehice.bind(this, speedVehicle[key], key));
+        }
+    }
+
+    changeSpeedVehice(speed, key) {
+        console.log(speed.value);
+        console.log(key);
+        var vehicles = this._cellularAutomata.getVehicles();
+
+        vehicles.forEach((vehicle) =>{
+            if(vehicle.getName() == key){
+                vehicle.setMaxSpeed(speed.value)
+            }
+        })
     }
 }
 

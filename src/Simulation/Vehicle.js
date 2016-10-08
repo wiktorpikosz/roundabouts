@@ -257,6 +257,9 @@ class Vehicle {
         }
         return;
     }
+    setMaxSpeed(speed) {
+        this._maxSpeed = speed;
+    }
 }
 
 export default Vehicle;

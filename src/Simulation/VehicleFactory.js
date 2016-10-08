@@ -3,28 +3,28 @@ import Direction from './Specification/Direction.js';
 
 class VehicleFactory {
 
-    static newCar(drivingRules) {
-        return new Vehicle(2, 5, 2, drivingRules, 'Car');
+    static newCar(drivingRules, speed = 5) {
+        return new Vehicle(2, speed, 2, drivingRules, 'Car');
     }
 
-    static newMotorcycle(drivingRules) {
-        return new Vehicle(1, 5, 2, drivingRules, 'Motorcycle');
+    static newMotorcycle(drivingRules, speed = 5) {
+        return new Vehicle(1, speed, 2, drivingRules, 'Motorcycle');
     }
 
-    static newVan(drivingRules) {
-        return new Vehicle(3, 5, 2, drivingRules, 'Van');
+    static newVan(drivingRules, speed = 5) {
+        return new Vehicle(3, speed, 2, drivingRules, 'Van');
     }
 
-    static newMiniBus(drivingRules) {
-        return new Vehicle(4, 3, 2, drivingRules, 'MiniBus');
+    static newMiniBus(drivingRules, speed = 3) {
+        return new Vehicle(4, speed, 2, drivingRules, 'MiniBus');
     }
 
-    static newBus(drivingRules) {
-        return new Vehicle(5, 2, 1, drivingRules, 'Bus');
+    static newBus(drivingRules, speed = 2) {
+        return new Vehicle(5, speed, 1, drivingRules, 'Bus');
     }
 
-    static newTruck(drivingRules) {
-        return new Vehicle(5, 2, 1, drivingRules, 'Truck');
+    static newTruck(drivingRules, speed = 2) {
+        return new Vehicle(5, speed, 1, drivingRules, 'Truck');
     }
 }
 
