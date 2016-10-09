@@ -64,7 +64,13 @@ class CellsDrawer {
 
     _cellFillColor(cell, cellElement) {
         if (!cell.isEmpty()) {
-            cellElement.fill = `#${cell.vehicle().id().toString(16)}`;
+            var color = cell.vehicle().id().toString(16);
+
+            if(color.length == 5){
+                color = '0' + color;
+            }
+
+            cellElement.fill = `#${color}`;
             cellElement.stroke = "#FFFFFF";
         } else {
             cellElement.fill = "transparent";
