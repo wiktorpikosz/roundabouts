@@ -69,7 +69,8 @@ let cellularAutomata = new CellularAutomata(
 
 let menu = new Menu(
     roundaboutDrawer,
-    cellularAutomata
+    cellularAutomata,
+    twojs
 );
 
 roundaboutDrawer.draw();

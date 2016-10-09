@@ -19,6 +19,10 @@ class Vehicle {
         return this._currentSpeed;
     }
 
+    maxSpeed(){
+        return this._maxSpeed;
+    }
+
     currentLaneId() {
         return this.frontCell().parentLane().id();
     }
@@ -257,6 +261,7 @@ class Vehicle {
         }
         return;
     }
+
     setMaxSpeed(speed) {
         this._maxSpeed = speed;
     }
