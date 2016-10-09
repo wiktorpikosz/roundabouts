@@ -97,20 +97,27 @@ class Menu {
 
         for (var i = 0; i < keys_length; i++) {
             var key = keys[i];
-            speedVehicle[key].addEventListener('change', this.changeSpeedVehice.bind(this, speedVehicle[key], key));
+            speedVehicle[key].addEventListener('change', this.changeSpeedVehicle.bind(this, speedVehicle[key], key));
         }
     }
 
-    changeSpeedVehice(speed, key) {
-        console.log(speed.value);
-        console.log(key);
+    changeSpeedVehicle(speed, key) {
         var vehicles = this._cellularAutomata.getVehicles();
+        console.log(vehicles.length);
 
+        //change the speed to the vehicle on the road
         vehicles.forEach((vehicle) => {
             if (vehicle.getName() == key) {
                 vehicle.setMaxSpeed(speed.value)
             }
-        })
+        });
+
+        //change the speed to the vehicle on the queue
+        this._cellularAutomata.getVehiclesQueues().forEach((queue, queueLane) => {
+            queue._vehicles.forEach((vehicle) => {
+                vehicle.setMaxSpeed(speed.value);
+            });
+        });
     }
 
     counterQueues() {

@@ -123,6 +123,10 @@ class CellularAutomata {
     getVehicles() {
         return this._vehicles;
     }
+
+    getVehiclesQueues(){
+        return this._vehiclesQueues;
+    }
 }
 
 export default CellularAutomata;
