@@ -4,7 +4,7 @@ class Translator {
         this._roundaboutSpecification = roundaboutSpecification;
         this._unitConverter = unitConverter;
         this._two = two;
-        this._centerPoint =  {
+        this._centerPoint = {
             x: this._two.width / 2,
             y: this._two.height / 2
         };
@@ -12,10 +12,10 @@ class Translator {
         var roadLengthPx = this._unitConverter.metersAsPixels(
             this._roundaboutSpecification.adherentRoadLength()
         );
-        var roundaboutRadiusPx =  this._unitConverter.metersAsPixels(
+        var roundaboutRadiusPx = this._unitConverter.metersAsPixels(
             this._roundaboutSpecification.roundaboutRadius()
         );
-        this._pixelsFromCenterToRoadCenter = roundaboutRadiusPx + roadLengthPx/2;
+        this._pixelsFromCenterToRoadCenter = roundaboutRadiusPx + roadLengthPx / 2;
     }
 
     translateTo(elements, where) {
@@ -44,7 +44,7 @@ class Translator {
             this._centerPoint.x - this._pixelsFromCenterToRoadCenter,
             this._centerPoint.y
         );
-        elements.rotation += 1*Math.PI / 2;
+        elements.rotation += 1 * Math.PI / 2;
     }
 
     translateToNorthRoad(elements) {
@@ -52,7 +52,7 @@ class Translator {
             this._centerPoint.x,
             this._centerPoint.y - this._pixelsFromCenterToRoadCenter
         );
-        elements.rotation += 2*Math.PI / 2;
+        elements.rotation += 2 * Math.PI / 2;
 
     }
 
@@ -61,7 +61,7 @@ class Translator {
             this._centerPoint.x + this._pixelsFromCenterToRoadCenter,
             this._centerPoint.y
         );
-        elements.rotation += 3*Math.PI / 2;
+        elements.rotation += 3 * Math.PI / 2;
     }
 }
 

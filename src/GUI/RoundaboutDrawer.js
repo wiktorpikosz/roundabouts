@@ -17,6 +17,7 @@ class RoundaboutDrawer {
         this._drawRoundaboutRoads();
         this._drawRoundaboutBrokenLanes();
         this._drawIsland();
+        this._drawPedestrianCrossings();
     }
 
     _drawRoundaboutRoads() {
@@ -138,6 +139,29 @@ class RoundaboutDrawer {
         );
         line.stroke = "#FFFFFF";
         return line;
+    }
+
+    _drawPedestrianCrossings(){
+        this._translator.translateToSouthRoad(this._drawCrossing());
+        this._translator.translateToNorthRoad(this._drawCrossing());
+        this._translator.translateToWestRoad(this._drawCrossing());
+        this._translator.translateToEastRoad(this._drawCrossing());
+    }
+
+    _drawCrossing(){
+        var groupedBelts = [];
+        var lineHeight = this._unitConverter.metersAsPixels(1);
+        var lineWidth = this._unitConverter.metersAsPixels(10);
+        var line_count = 14;
+
+        for(var i = 0; i < line_count; i++) {
+            var height = (line_count*lineHeight/2 - (lineHeight/2)) - (i*lineHeight);
+            var line = this._two.makeRectangle(height, -lineWidth, lineHeight, lineWidth);
+            line.fill = "#FFFFFF";
+            groupedBelts.push(line);
+        }
+
+        return this._two.makeGroup(groupedBelts);
     }
 }
 
