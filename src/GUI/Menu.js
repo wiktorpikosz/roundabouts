@@ -115,7 +115,9 @@ class Menu {
         //change the speed to the vehicle on the queue
         this._cellularAutomata.getVehiclesQueues().forEach((queue, queueLane) => {
             queue._vehicles.forEach((vehicle) => {
-                vehicle.setMaxSpeed(speed.value);
+                if (vehicle.getName() == key) {
+                    vehicle.setMaxSpeed(speed.value);
+                }
             });
         });
     }
