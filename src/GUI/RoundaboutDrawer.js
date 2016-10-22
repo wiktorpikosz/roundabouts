@@ -142,10 +142,21 @@ class RoundaboutDrawer {
     }
 
     _drawPedestrianCrossings(){
-        this._translator.translateToSouthRoad(this._drawCrossing());
-        this._translator.translateToNorthRoad(this._drawCrossing());
-        this._translator.translateToWestRoad(this._drawCrossing());
-        this._translator.translateToEastRoad(this._drawCrossing());
+        var south = this._drawCrossing();
+        this._translator.translateToSouthRoad(south);
+        this.crossing(1).setDraw(south);
+
+        var north = this._drawCrossing();
+        this._translator.translateToNorthRoad(north);
+        this.crossing(0).setDraw(north);
+
+        var west = this._drawCrossing();
+        this._translator.translateToWestRoad(west);
+        this.crossing(3).setDraw(west);
+
+        var east = this._drawCrossing();
+        this._translator.translateToEastRoad(east);
+        this.crossing(2).setDraw(east);
     }
 
     _drawCrossing(){
@@ -162,6 +173,10 @@ class RoundaboutDrawer {
         }
 
         return this._two.makeGroup(groupedBelts);
+    }
+
+    crossing(id){
+        return this._roundaboutSpecification.adherentRoads()[id].crossing();
     }
 }
 

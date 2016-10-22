@@ -39,6 +39,7 @@ class CellsDrawer {
         this._roundaboutSpecification.innerRoadLanes().forEach(lane => {
             var laneRadiusPx = this._unitConverter.metersAsPixels(this._roundaboutSpecification.laneRadius(lane.id()));
             var cellsCount = this._unitConverter.metersAsCells(lane.length());
+
             this._cellsMap.cellsOnLane(lane.id()).forEach((cell, cellIndex) => {
                 var pct = cellsCount - cellIndex / cellsCount;
                 var theta = pct * Math.PI * 2;
@@ -53,7 +54,7 @@ class CellsDrawer {
                 singleCell.rotation = Math.atan2(-y, -x) + Math.PI / 2;
                 // add id vehicle to call
                 this.vehicleId(singleCell, cell);
-
+                this.cellId(singleCell, cell);
                 this._drawStrokeIfDebug(singleCell);
                 this._cellFillColor(cell, singleCell);
                 this._drawnCells.push(singleCell);
@@ -66,7 +67,7 @@ class CellsDrawer {
         if (!cell.isEmpty()) {
             var color = cell.vehicle().id().toString(16);
 
-            if(color.length == 5){
+            if (color.length == 5) {
                 color = '0' + color;
             }
 
@@ -125,25 +126,33 @@ class CellsDrawer {
 
                 // add id vehicle to call
                 this.vehicleId(singleCell, cell);
-
+                this.cellId(singleCell, cell);
                 this._drawStrokeIfDebug(singleCell);
                 this._cellFillColor(cell, singleCell);
                 cellsToGroup.push(singleCell);
             });
         });
-
         var groupedCells = this._two.makeGroup(cellsToGroup);
+
+        groupedCells.groupId = road._direction.id();
         this._drawnCells.push(groupedCells);
         return groupedCells;
     }
 
-    vehicleId(singleCell, cell){
+    vehicleId(singleCell, cell) {
         this._two.update();
         var path = singleCell._renderer.elem;
 
-        if(!cell.isEmpty()) {
+        if (!cell.isEmpty()) {
             path.setAttribute('id-vehicle', cell.vehicle().id());
         }
+    }
+
+    cellId(singleCell, cell) {
+        this._two.update();
+        var path = singleCell._renderer.elem;
+
+        path.setAttribute('id-cell', cell.id());
     }
 }
 

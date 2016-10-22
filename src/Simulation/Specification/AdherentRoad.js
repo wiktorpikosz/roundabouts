@@ -1,5 +1,6 @@
 import {range} from '../../JsWhyYouNoImplement.js';
 import Lane from './Lane.js';
+import Crossing from '../Crossing';
 
 class AdherentRoad {
 
@@ -8,6 +9,7 @@ class AdherentRoad {
         this._direction = direction;
         this._entrancesLanes = entrancesLanes;
         this._exitsLanes = exitLanes;
+        this.newCrossing();
     }
 
     id() {
@@ -32,6 +34,16 @@ class AdherentRoad {
         });
 
         return new AdherentRoad(direction, length, entranceLanes, exitLanes);
+    }
+
+    newCrossing(){
+        var entrance = this._direction.id() + "_ENTRANCE_";
+        var exit = this._direction.id() + "_EXIT_";
+        this._crossing = new Crossing(this._direction.id(), [entrance+"09", entrance+"19"], [exit+"11", exit+"01"]);
+    }
+
+    crossing(){
+        return this._crossing;
     }
 }
 

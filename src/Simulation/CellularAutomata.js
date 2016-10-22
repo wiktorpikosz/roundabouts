@@ -68,6 +68,7 @@ class CellularAutomata {
         this._moveVehicles();
         this._addVehiclesFromQueue();
         this._cellsMap.notifyAll();
+        this._goPedestrian();
     }
 
     hasFinished() {
@@ -124,8 +125,19 @@ class CellularAutomata {
         return this._vehicles;
     }
 
-    getVehiclesQueues(){
+    getVehiclesQueues() {
         return this._vehiclesQueues;
+    }
+
+    adherentRoads() {
+        return this._cellsMap._roundaboutSpecification.adherentRoads();
+    }
+
+    _goPedestrian() {
+        this.adherentRoads().forEach((road) => {
+            road.crossing().randPedestrian();
+            road.crossing().draw();
+        })
     }
 }
 
