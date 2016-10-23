@@ -31,21 +31,12 @@ class Crossing {
         if (this._pedestrian.isRun()) {
             this._draw.parent._collection.forEach((lane) => {
                 if (lane.groupId == this._id) {
-                    var cell = 11 + (14*this._pedestrian.state());
+                    var cell = 11 + (14 * this._pedestrian.state());
                     lane._collection[cell].stroke = "#F00";
                     lane._collection[cell].fill = "#FFFF00";
                 }
             });
         }
-        // if (this._pedestrian.isRun()) {
-        //     this._draw.children.forEach((element) => {
-        //         element.stroke = "#F00";
-        //     });
-        // } else {
-        //     this._draw.children.forEach((element) => {
-        //         element.stroke = "#000";
-        //     })
-        // }
     }
 }
 
