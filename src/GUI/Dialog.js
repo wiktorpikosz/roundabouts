@@ -13,6 +13,7 @@ class Dialog {
         this._cellularAutomata = null;
         this._menu = null;
         this._rule = 0;
+        this._speed = {};
         this._dialog();
     }
 
@@ -29,6 +30,7 @@ class Dialog {
     _clickContinue(modal, selectRules) {
         modal.style.display = "none";
         this.rule = selectRules.value;
+        this._configSpeed();
         this._run();
     }
 
@@ -65,6 +67,36 @@ class Dialog {
 
     }
 
+    _configSpeed() {
+        var car = document.getElementById("init-car-speed");
+        var motorcycle = document.getElementById("init-motorcycle-speed");
+        var truck = document.getElementById("init-truck-speed");
+        var van = document.getElementById("init-van-speed");
+        var minibus = document.getElementById("init-minibus-speed");
+        var bus = document.getElementById("init-bus-speed");
+
+        var speed = {
+            car: car.value,
+            motorcycle: motorcycle.value,
+            truck: truck.value,
+            van: van.value,
+            minibus: minibus.value,
+            bus: bus.value
+        };
+
+        this._speed = speed;
+        this._changeValueInVehicle(speed);
+    }
+
+    _changeValueInVehicle(speed) {
+        document.getElementById("car-speed").value = speed.car;
+        document.getElementById("motorcycle-speed").value = speed.motorcycle;
+        document.getElementById("van-speed").value = speed.van;
+        document.getElementById("minibus-speed").value = speed.minibus;
+        document.getElementById("bus-speed").value = speed.bus;
+        document.getElementById("truck-speed").value = speed.truck;
+    }
+
     _factoryMenu() {
         this._menu = new Menu(
             this._roundaboutDrawer,
@@ -79,7 +111,9 @@ class Dialog {
             this._cellsNeighbours,
             this._rules(),
             this._roundaboutBukowe.adherentLanesCount() / 2,
-            0.5
+            0.5,
+            500,
+            this._speed
         );
     }
 

@@ -34,7 +34,7 @@ class Menu {
 
         var speed = {
             'Car': document.getElementById('car-speed'),
-            'Motorcycle': document.getElementById('motocycle-speed'),
+            'Motorcycle': document.getElementById('motorcycle-speed'),
             'Van': document.getElementById('van-speed'),
             'MiniBus': document.getElementById('minibus-speed'),
             'Bus': document.getElementById('bus-speed'),
