@@ -25,12 +25,13 @@ class VehicleQueue {
 
 class CellularAutomata {
 
-    constructor(cellsMap, cellsNeighbours, drivingRules, ingoingLanesCount, truckRatio = 0, vehicleCount = 500, speed = {}) {
+    constructor(cellsMap, cellsNeighbours, drivingRules, ingoingLanesCount, truckRatio = 0, vehicleCount = 500, speed = {}, probabilityPedestrian = 0) {
         this._iterations = 0;
         this._cellsMap = cellsMap;
         this._cellsNeighbours = cellsNeighbours;
         this._drivingRules = drivingRules;
         this._vehicles = [];
+        this._probabilityPedestrian = probabilityPedestrian;
 
         var vehicles = [];
         range(0, Math.round(vehicleCount * (1 - truckRatio))).forEach(() => {
@@ -136,7 +137,7 @@ class CellularAutomata {
     _goPedestrian() {
         this.adherentRoads().forEach((road) => {
             road.crossing().randPedestrian();
-            road.crossing().draw();
+            road.crossing().draw(this._cellsMap, this._probabilityPedestrian);
         })
     }
 }

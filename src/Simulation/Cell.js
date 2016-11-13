@@ -3,6 +3,8 @@ class Cell {
         this._parentLane = null;
         this._cellId = cellId;
         this._vehicle = false;
+        this._pedestrian = false;
+        this._allocation = false;
     }
 
     setVehicle(vehicle) {
@@ -10,6 +12,22 @@ class Cell {
             throw new Error("Vehicle " + vehicle.toString() + " crashed onto " + this._vehicle.toString());
         }
         this._vehicle = vehicle;
+    }
+
+    setPedestrian(pedestrian) {
+        this._pedestrian = pedestrian;
+    }
+
+    isPedestrian() {
+        return this._pedestrian;
+    }
+
+    setAllocation(allocation) {
+        this._allocation = allocation;
+    }
+
+    isAllocation() {
+        return this._allocation;
     }
 
     vehicle() {

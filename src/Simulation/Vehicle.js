@@ -4,7 +4,7 @@ class Vehicle {
         this._lengthCells = lengthCells;
         this._currentSpeed = 1;
         this._maxSpeed = maxSpeed;
-        this._id = Math.round(Math.random()*16777215);
+        this._id = Math.round(Math.random() * 16777215);
         this._currentCells = [];
         this._maxSpeedWhenTurning = maxSpeedWhenTurning;
         this._drivingRules = drivingRules;
@@ -19,7 +19,7 @@ class Vehicle {
         return this._currentSpeed;
     }
 
-    maxSpeed(){
+    maxSpeed() {
         return this._maxSpeed;
     }
 
@@ -53,14 +53,20 @@ class Vehicle {
 
     moveToNextIteration(cellsMap, cellsNeighbours) {
         //Entering roundabout
-        if(cellsNeighbours.approachedEntrance(this)) {
+        if (cellsNeighbours.approachedEntrance(this)) {
             this._onEntrance(cellsMap, cellsNeighbours);
             return;
         }
 
         //Taking exit
-        if(cellsNeighbours.approachedDestinationExit(this)) {
+        if (cellsNeighbours.approachedDestinationExit(this)) {
             this._onExit(cellsMap);
+            return;
+        }
+
+        if (this._passPedestrian()) {
+            //console.log("Stop, crosswalk: " + this._id);
+            this._stop();
             return;
         }
 
@@ -69,7 +75,7 @@ class Vehicle {
                 this._drivingRules.roundaboutRules.shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours, this) &&
                 cellsNeighbours.isApproachingAnyExit(this)
             ) {
-                if(!cellsMap.nothingInFrontOf(this, this._currentSpeed+1)) {
+                if (!cellsMap.nothingInFrontOf(this, this._currentSpeed + 1)) {
                     var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
                     this._break(breakUpTo);
                 } else {
@@ -100,15 +106,20 @@ class Vehicle {
         cellsMap.moveVehicleBy(this, this._currentSpeed);
     }
 
+    _currentLine() {
+        return this.frontCell().parentLane();
+    }
+
     _accelrateIfPossible(cellsMap, cellsNeighbours) {
-        if (cellsMap.nothingInFrontOf(this, this._currentSpeed+1)) {
+        if (cellsMap.nothingInFrontOf(this, this._currentSpeed + 1)) {
             if (!this._isApproachingExit(cellsNeighbours) && !this._isApproachingRoundabout(cellsNeighbours)) {
                 this._accelerate();
             }
         }
     }
+
     _keepSafeDistanceFromPrecedeeingVehicle(cellsMap) {
-        if (!cellsMap.nothingInFrontOf(this, this._currentSpeed+1)) {
+        if (!cellsMap.nothingInFrontOf(this, this._currentSpeed + 1)) {
             var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
             this._break(breakUpTo);
         }
@@ -162,13 +173,13 @@ class Vehicle {
         });
     }
 
-    getName(){
+    getName() {
         return this._name;
     }
 
-    _accelerate(by=1) {
-        if (this._currentSpeed+by < this._maxSpeed) {
-            this._currentSpeed+=by;
+    _accelerate(by = 1) {
+        if (this._currentSpeed + by < this._maxSpeed) {
+            this._currentSpeed += by;
         } else {
             this._currentSpeed = this._maxSpeed;
         }
@@ -219,7 +230,7 @@ class Vehicle {
             }
         }
         var vehicleOnTheRight = cellsMap.vehicleOnTheRight(this);
-        if(vehicleOnTheRight && this._drivingRules.entranceRules.shouldYieldTo(this, vehicleOnTheRight)) {
+        if (vehicleOnTheRight && this._drivingRules.entranceRules.shouldYieldTo(this, vehicleOnTheRight)) {
             this._stop()
             return;
         }
@@ -240,7 +251,7 @@ class Vehicle {
         if (this.currentSpeed() > this.maxSpeedWhenTurning()) {
             this._break(this.maxSpeedWhenTurning());
         }
-        if(nothingInFrontOnRoundabout) {
+        if (nothingInFrontOnRoundabout) {
             cellsMap.takeEntrance(this, cellsNeighbours);
         }
     }
@@ -260,6 +271,57 @@ class Vehicle {
             cellsMap.takeExit(this);
         }
         return;
+    }
+
+    _checkTypeLine() {
+        var type = this._currentLine().id();
+
+        if (typeof type == 'string') {
+            if (type.search(/ENTRANCE/) > 0) {
+                return "ENTRANCE";
+            }
+            else {
+                return "EXIT";
+            }
+        } else {
+            return "ROUNDED";
+        }
+    }
+
+    _passPedestrian() {
+        var currentNumber = this.frontCell().number();
+        var lane = this._currentLine().allCells();
+        var type = this._checkTypeLine();
+
+        if (type == "ENTRANCE") {
+
+            if(this._checkPedestrian(currentNumber, lane, 7, 10)){
+                if(currentNumber == 7 || currentNumber == 8){
+                    this._break(1);
+                    return false;
+                }
+                return true;
+            }
+        }
+        else if(type == "EXIT") {
+            if(this._checkPedestrian(currentNumber, lane, 0, 1)){
+                if(currentNumber == 0){
+                    this._break(1);
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    _checkPedestrian(currentNumber, lane, minNumber, maxNumber) {
+        if (currentNumber >= minNumber && currentNumber <= maxNumber) {
+            if (lane[11].isPedestrian() || lane[11].isAllocation()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     setMaxSpeed(speed) {

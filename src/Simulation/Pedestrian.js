@@ -3,7 +3,7 @@ class Pedestrian {
     constructor(crossing) {
         this._crossing = crossing;
         this._run = false;
-        this._period = 0; // max: 3
+        this._state = 0; // max: 3
     }
 
     isRun() {
@@ -14,18 +14,18 @@ class Pedestrian {
         if (this._run == false) {
             this._run = parseInt(Math.random() * 2) ? true : false;
         } else {
-            if (this._period == 3) { //reset state
-                this._period = 0;
+            if (this._state == 3) { //reset state
+                this._state = 0;
                 this._run = false;
             } else {
-                this._period++;
+                this._state++;
             }
         }
     }
 
     state() {
         if (this._run) {
-            return this._period;
+            return this._state;
         }
         else {
             return null;

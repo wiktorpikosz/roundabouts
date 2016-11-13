@@ -14,6 +14,7 @@ class Dialog {
         this._menu = null;
         this._rule = 0;
         this._speed = {};
+        this._probabilityPedestrian = 0;
         this._dialog();
     }
 
@@ -21,21 +22,22 @@ class Dialog {
         var modal = document.getElementById('dialog');
         var button = document.getElementById('dialog-continue');
         var selectRules = document.getElementById('rules');
-
+        var probabilityPedestrian = document.getElementById('init-prob-pedestrian');
         modal.style.display = "block";
 
-        button.addEventListener("click", this._clickContinue.bind(this, modal, selectRules));
+        button.addEventListener("click", this._clickContinue.bind(this, modal, selectRules, probabilityPedestrian));
     }
 
-    _clickContinue(modal, selectRules) {
+    _clickContinue(modal, selectRules, probabilityPedestrian) {
         modal.style.display = "none";
-        this.rule = selectRules.value;
+        this._rule = selectRules.value;
+        this._probabilityPedestrian = probabilityPedestrian.value;
         this._configSpeed();
         this._run();
     }
 
     _rules() {
-        switch (this.rule) {
+        switch (this._rule) {
             case '1':
                 return DrivingRules.newRules1(
                     this._roundaboutBukowe.lanesCount(),
@@ -113,7 +115,8 @@ class Dialog {
             this._roundaboutBukowe.adherentLanesCount() / 2,
             0.5,
             500,
-            this._speed
+            this._speed,
+            this._probabilityPedestrian
         );
     }
 
