@@ -10,9 +10,10 @@ class Pedestrian {
         return this._run;
     }
 
-    rand() {
+    rand(probability) {
         if (this._run == false) {
-            this._run = parseInt(Math.random() * 2) ? true : false;
+            //this._run = parseInt(Math.random() * 2) ? true : false;
+            this._run = (Math.random() / 1) < probability;
         } else {
             if (this._state == 3) { //reset state
                 this._state = 0;

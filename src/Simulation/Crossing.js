@@ -25,11 +25,11 @@ class Crossing {
         this._draw = draw;
     }
 
-    randPedestrian() {
-        this._pedestrian.rand();
+    randPedestrian(probability) {
+        this._pedestrian.rand(probability);
     }
 
-    draw(cellsMap, probabilityPedestrian) {
+    draw(cellsMap) {
         this._clearEarlyCells(cellsMap);
         if (this._pedestrian.isRun()) {
             this._draw.parent._collection.forEach((lane) => {

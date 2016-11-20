@@ -136,8 +136,8 @@ class CellularAutomata {
 
     _goPedestrian() {
         this.adherentRoads().forEach((road) => {
-            road.crossing().randPedestrian();
-            road.crossing().draw(this._cellsMap, this._probabilityPedestrian);
+            road.crossing().randPedestrian(this._probabilityPedestrian);
+            road.crossing().draw(this._cellsMap);
         })
     }
 }
