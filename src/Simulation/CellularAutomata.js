@@ -35,10 +35,10 @@ class CellularAutomata {
 
         var vehicles = [];
         range(0, Math.round(vehicleCount * (1 - truckRatio))).forEach(() => {
-            vehicles.push(VehicleFactory.newCar(this._drivingRules, speed.car));
+            vehicles.push(VehicleFactory.newCar(this._drivingRules, parseInt(speed.car)));
         });
         range(0, Math.round(vehicleCount * truckRatio)).forEach(() => {
-            vehicles.push(VehicleFactory.newTruck(this._drivingRules, speed.truck));
+            vehicles.push(VehicleFactory.newTruck(this._drivingRules, parseInt(speed.truck)));
         });
         vehicles.forEach(vehicle => {
             vehicle.setPath(drivingRules.randomPath());
