@@ -34,15 +34,19 @@ class Crossing {
         if (this._pedestrian.isRun()) {
             this._draw.parent._collection.forEach((lane) => {
                 if (lane.groupId == this._id) {
-                    var state = this._pedestrian.state();
-                    var cell = 11 + (14 * state);
+                    if (this._pedestrian.state() > 0) {
+                        var state = this._pedestrian.state() - 1;
+                        var cell = 11 + (14 * state);
 
-                    var line_array = this._getLine(state, cellsMap);
-                    this._changeAllocation(cellsMap, state);
-                    this._setCellForPedestrian(line_array);
+                        var line_array = this._getLine(state, cellsMap);
+                        this._changeAllocation(cellsMap, state);
+                        this._setCellForPedestrian(line_array);
 
-                    lane.children[cell].stroke = "#F00";
-                    lane.children[cell].fill = "#FFFF00";
+                        lane.children[cell].stroke = "#F00";
+                        lane.children[cell].fill = "#FFFF00";
+                    } else {
+                        this._changeAllocation(cellsMap, 0);
+                    }
                 }
             });
         }
