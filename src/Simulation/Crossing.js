@@ -11,6 +11,7 @@ class Crossing {
         this._allocationCell = [];
         this._lane = null;
         this._cell = null;
+        this._listLane = ["_EXIT_0", "_EXIT_1", "_ENTRANCE_1", "_ENTRANCE_0"];
     }
 
     id() {
@@ -25,7 +26,13 @@ class Crossing {
         this._draw = draw;
     }
 
-    randPedestrian(probability) {
+    randPedestrian(probability, cellsMap) {
+        if (this._pedestrian.isRun()) {
+            if (this._checkExitIsEmpty(cellsMap, this._pedestrian.state())) {
+                return true;
+            }
+        }
+
         this._pedestrian.rand(probability);
     }
 
@@ -78,12 +85,26 @@ class Crossing {
     }
 
     _changeAllocation(cellsMap, state) {
-        var list_lane = ["_EXIT_0", "_EXIT_1", "_ENTRANCE_1", "_ENTRANCE_0"];
+        var list_lane = this._listLane;
 
         for (var i = state; i <= 3; i++) {
             var lane = cellsMap.cellsOnLane(this._id + list_lane[i]);
             lane[11].setAllocation(true);
         }
+    }
+
+    _checkExitIsEmpty(cellsMap, state) {
+        if (state < 2) {
+            for (var i = state; i < 2; i++) {
+                var lane = cellsMap.cellsOnLane(this._id + this._listLane[i]);
+                console.log(lane[2].isEmpty());
+                if (!lane[2].isEmpty()) {
+                    console.log(lane[2]);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 
