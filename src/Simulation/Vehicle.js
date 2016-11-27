@@ -295,7 +295,7 @@ class Vehicle {
 
         if (type == "ENTRANCE") {
 
-            if(this._checkPedestrian(currentNumber, lane, 7, 10)){
+            if(this._checkPedestrian(currentNumber, lane, 7, 10, 11)){
                 if(currentNumber == 7 || currentNumber == 8){
                     this._break(1);
                     return false;
@@ -304,7 +304,7 @@ class Vehicle {
             }
         }
         else if(type == "EXIT") {
-            if(this._checkPedestrian(currentNumber, lane, 0, 1)){
+            if(this._checkPedestrian(currentNumber, lane, 0, 1, 2)){
                 if(currentNumber == 0){
                     this._break(1);
                     return false;
@@ -315,9 +315,10 @@ class Vehicle {
         return false;
     }
 
-    _checkPedestrian(currentNumber, lane, minNumber, maxNumber) {
+    _checkPedestrian(currentNumber, lane, minNumber, maxNumber, number_cell) {
         if (currentNumber >= minNumber && currentNumber <= maxNumber) {
-            if (lane[11].isPedestrian() || lane[11].isAllocation()) {
+            console.log(lane[parseInt(number_cell)]);
+            if (lane[parseInt(number_cell)].isPedestrian() || lane[parseInt(number_cell)].isAllocation()) {
                 return true;
             }
         }

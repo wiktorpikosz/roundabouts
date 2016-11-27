@@ -47,7 +47,7 @@ class Crossing {
 
                         var line_array = this._getLine(state, cellsMap);
                         this._changeAllocation(cellsMap, state);
-                        this._setCellForPedestrian(line_array);
+                        this._setCellForPedestrian(line_array, state);
 
                         lane.children[cell].stroke = "#F00";
                         lane.children[cell].fill = "#FFFF00";
@@ -72,12 +72,21 @@ class Crossing {
         }
     }
 
-    _setCellForPedestrian(lane) {
-        lane[11].setPedestrian(true);
+    _setCellForPedestrian(lane, state) {
+        if(state < 2){
+            lane[2].setPedestrian(true);
+        } else {
+            lane[11].setPedestrian(true);
+        }
     }
 
     _clearEarlyCells(cellsMap) {
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i < 2; i++) {
+            var cells = this._getLine(i, cellsMap);
+            cells[2].setPedestrian(false);
+            cells[2].setAllocation(false);
+        }
+        for (var i = 2; i < 4; i++) {
             var cells = this._getLine(i, cellsMap);
             cells[11].setPedestrian(false);
             cells[11].setAllocation(false);
@@ -87,9 +96,13 @@ class Crossing {
     _changeAllocation(cellsMap, state) {
         var list_lane = this._listLane;
 
-        for (var i = state; i <= 3; i++) {
+        for (var i = state; i < 4; i++) {
             var lane = cellsMap.cellsOnLane(this._id + list_lane[i]);
-            lane[11].setAllocation(true);
+            if(i < 2){
+                lane[2].setAllocation(true);
+            } else {
+                lane[11].setAllocation(true);
+            }
         }
     }
 
@@ -97,9 +110,7 @@ class Crossing {
         if (state < 2) {
             for (var i = state; i < 2; i++) {
                 var lane = cellsMap.cellsOnLane(this._id + this._listLane[i]);
-                console.log(lane[2].isEmpty());
                 if (!lane[2].isEmpty()) {
-                    console.log(lane[2]);
                     return true;
                 }
             }
