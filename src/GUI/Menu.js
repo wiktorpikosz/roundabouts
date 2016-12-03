@@ -18,7 +18,7 @@ class Menu {
         this.eventVehicle();
 
         if (this._cellularAutomata.hasFinished()) {
-            console.log("Finished simulation, ", cellularAutomata.iterations());
+            console.log("Finished simulation, ", this._cellularAutomata.iterations());
             this._start = false;
             return;
         }

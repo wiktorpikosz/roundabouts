@@ -33,6 +33,13 @@ var drivingRule = DrivingRules.newRules4(
 
 var vehiclesCount = range(0, 100);
 
+var speed = {
+    car: 5,
+    truck: 2
+};
+
+var probabilityPedestrian = 0.1;
+
 vehiclesCount.forEach(vehicleCount => {
 
     var results = [];
@@ -43,7 +50,9 @@ vehiclesCount.forEach(vehicleCount => {
             drivingRule,
             roundaboutBukowe.adherentLanesCount() / 2,
             0,
-            vehicleCount
+            vehicleCount,
+            speed,
+            probabilityPedestrian
         );
 
         while (!cellularAutomata.hasFinished()) {

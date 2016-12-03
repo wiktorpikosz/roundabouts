@@ -317,7 +317,6 @@ class Vehicle {
 
     _checkPedestrian(currentNumber, lane, minNumber, maxNumber, number_cell) {
         if (currentNumber >= minNumber && currentNumber <= maxNumber) {
-            console.log(lane[parseInt(number_cell)]);
             if (lane[parseInt(number_cell)].isPedestrian() || lane[parseInt(number_cell)].isAllocation()) {
                 return true;
             }

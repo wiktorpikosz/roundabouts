@@ -26,6 +26,7 @@ class CellsDrawer {
         this._clearDrawnElements();
         this._drawRoundaboutGrid();
         this._drawAdherentRoadsGrid();
+        this._drawPedestrian();
     }
 
     _clearDrawnElements() {
@@ -137,6 +138,12 @@ class CellsDrawer {
         groupedCells.groupId = road._direction.id();
         this._drawnCells.push(groupedCells);
         return groupedCells;
+    }
+
+    _drawPedestrian() {
+        this._roundaboutSpecification.adherentRoads().forEach((road) => {
+            road.crossing().draw();
+        })
     }
 
     vehicleId(singleCell, cell) {

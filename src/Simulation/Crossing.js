@@ -36,23 +36,33 @@ class Crossing {
         this._pedestrian.rand(probability);
     }
 
-    draw(cellsMap) {
+    execute(cellsMap) {
         this._clearEarlyCells(cellsMap);
         if (this._pedestrian.isRun()) {
-            this._draw.parent._collection.forEach((lane) => {
+            if (this._pedestrian.state() > 0) {
+                var state = this._pedestrian.state() - 1;
+                var cell = 11 + (14 * state);
+
+                var line_array = this._getLine(state, cellsMap);
+                this._changeAllocation(cellsMap, state);
+                this._setCellForPedestrian(line_array, state);
+
+            } else {
+                this._changeAllocation(cellsMap, 0);
+            }
+        }
+    }
+
+    draw() {
+        if (this._pedestrian.isRun()) {
+            this._draw.parent.children.forEach((lane) => {
                 if (lane.groupId == this._id) {
                     if (this._pedestrian.state() > 0) {
                         var state = this._pedestrian.state() - 1;
                         var cell = 11 + (14 * state);
 
-                        var line_array = this._getLine(state, cellsMap);
-                        this._changeAllocation(cellsMap, state);
-                        this._setCellForPedestrian(line_array, state);
-
                         lane.children[cell].stroke = "#F00";
                         lane.children[cell].fill = "#FFFF00";
-                    } else {
-                        this._changeAllocation(cellsMap, 0);
                     }
                 }
             });
@@ -73,7 +83,7 @@ class Crossing {
     }
 
     _setCellForPedestrian(lane, state) {
-        if(state < 2){
+        if (state < 2) {
             lane[2].setPedestrian(true);
         } else {
             lane[11].setPedestrian(true);
@@ -98,7 +108,7 @@ class Crossing {
 
         for (var i = state; i < 4; i++) {
             var lane = cellsMap.cellsOnLane(this._id + list_lane[i]);
-            if(i < 2){
+            if (i < 2) {
                 lane[2].setAllocation(true);
             } else {
                 lane[11].setAllocation(true);
