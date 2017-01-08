@@ -1,6 +1,6 @@
 class Vehicle {
 
-    constructor(lengthCells, maxSpeed, maxSpeedWhenTurning, drivingRules, name) {
+    constructor(lengthCells, maxSpeed, maxSpeedWhenTurning, drivingRules, name, surface, distance) {
         this._lengthCells = lengthCells;
         this._currentSpeed = 1;
         this._maxSpeed = maxSpeed;
@@ -8,7 +8,13 @@ class Vehicle {
         this._currentCells = [];
         this._maxSpeedWhenTurning = maxSpeedWhenTurning;
         this._drivingRules = drivingRules;
-        this._name = name
+        this._name = name;
+        this._surface = surface;
+        this._distance = distance;
+
+        this._deceleration = 0;
+        this._crash = false;
+        this._crash_help = 0;
     }
 
     maxSpeedWhenTurning() {
@@ -52,6 +58,14 @@ class Vehicle {
     }
 
     moveToNextIteration(cellsMap, cellsNeighbours) {
+        if(this._crash){
+            if(this._crash_help == 10){
+                this.remove();
+                return;
+            }
+            this._crash_help++;
+            return;
+        }
         //Entering roundabout
         if (cellsNeighbours.approachedEntrance(this)) {
             this._onEntrance(cellsMap, cellsNeighbours);
@@ -75,7 +89,7 @@ class Vehicle {
                 this._drivingRules.roundaboutRules.shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours, this) &&
                 cellsNeighbours.isApproachingAnyExit(this)
             ) {
-                if (!cellsMap.nothingInFrontOf(this, this._currentSpeed + 1)) {
+                if (!cellsMap.nothingInFrontOf(this, this._currentSpeed + this._getSafeDistanceRatio())) {
                     var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
                     this._break(breakUpTo);
                 } else {
@@ -111,16 +125,22 @@ class Vehicle {
     }
 
     _accelrateIfPossible(cellsMap, cellsNeighbours) {
-        if (cellsMap.nothingInFrontOf(this, this._currentSpeed + 1)) {
+        if (cellsMap.nothingInFrontOf(this, this._currentSpeed + this._getSafeDistanceRatio())) {
             if (!this._isApproachingExit(cellsNeighbours) && !this._isApproachingRoundabout(cellsNeighbours)) {
                 this._accelerate();
+                //console.log("Przyspieszam: " + this.id());
             }
         }
     }
 
     _keepSafeDistanceFromPrecedeeingVehicle(cellsMap) {
-        if (!cellsMap.nothingInFrontOf(this, this._currentSpeed + 1)) {
-            var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
+
+        if (!cellsMap.nothingInFrontOf(this, this._currentSpeed + this._getSafeDistanceRatio())) {
+            if(this._distance > 1) {
+                var breakUpTo = Math.floor(this._distanceFromPrecedingVehicle(cellsMap) -  this._distance);
+            } else {
+                var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
+            }
             this._break(breakUpTo);
         }
     }
@@ -134,7 +154,7 @@ class Vehicle {
 
     moveToCells(cells) {
         if (cells.length != this.lengthCells()) {
-            throw new Error("Vehicle received invalid directions!");
+            throw new Error("Vehicle received invalid directions! : " + this.id());
         }
         this._currentCells.forEach(cell => {
             cell.setVehicle(null);
@@ -186,7 +206,21 @@ class Vehicle {
     }
 
     _break(to) {
-        this._currentSpeed = to;
+        if(this._surface < 1) {
+            if (this._currentSpeed > 0) {
+                var ratio_braking = this._surface;
+                var tmp = Math.floor((this._currentSpeed - to) * ratio_braking + this._deceleration);
+                this._deceleration = (this._currentSpeed - to) * ratio_braking;
+
+                if (this._currentSpeed - tmp < 0) {
+                    this._currentSpeed = 0;
+                    return
+                }
+                this._currentSpeed -= tmp;
+            }
+        } else{
+            this._currentSpeed = to;
+        }
     }
 
     _breakBy(by) {
@@ -326,6 +360,19 @@ class Vehicle {
 
     setMaxSpeed(speed) {
         this._maxSpeed = speed;
+    }
+
+    crash(){
+        this._crash = true;
+    }
+
+    _getSafeDistanceRatio(){
+        if(this._distance > 1){
+            return this._distance;
+        }
+        else {
+            return 1;
+        }
     }
 }
 

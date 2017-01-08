@@ -15,6 +15,8 @@ class Dialog {
         this._rule = 0;
         this._speed = {};
         this._probabilityPedestrian = 0;
+        this._surface = 0;
+        this._distance = 0;
         this._dialog();
     }
 
@@ -23,15 +25,20 @@ class Dialog {
         var button = document.getElementById('dialog-continue');
         var selectRules = document.getElementById('rules');
         var probabilityPedestrian = document.getElementById('init-prob-pedestrian');
+        var surface = document.getElementById('init-surface');
+        var distance = document.getElementById('init-distance');
+
         modal.style.display = "block";
 
-        button.addEventListener("click", this._clickContinue.bind(this, modal, selectRules, probabilityPedestrian));
+        button.addEventListener("click", this._clickContinue.bind(this, modal, selectRules, probabilityPedestrian, surface, distance));
     }
 
-    _clickContinue(modal, selectRules, probabilityPedestrian) {
+    _clickContinue(modal, selectRules, probabilityPedestrian, surface, distance) {
         modal.style.display = "none";
         this._rule = selectRules.value;
         this._probabilityPedestrian = probabilityPedestrian.value;
+        this._surface = surface.value;
+        this._distance = distance.value;
         this._configSpeed();
         this._run();
     }
@@ -116,7 +123,9 @@ class Dialog {
             0.5,
             500,
             this._speed,
-            this._probabilityPedestrian
+            this._probabilityPedestrian,
+            this._surface,
+            this._distance
         );
     }
 

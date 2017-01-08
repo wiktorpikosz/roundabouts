@@ -157,22 +157,28 @@
                     <td><input type="number" id="init-prob-pedestrian" class="input-dialog" value="0.1" step="0.1" min="0" max="1"></td>
                 </tr>
                 <tr>
-                    <th>Weather conditions</th>
+                    <th>Conditions</th>
                 </tr>
                 <tr>
-                    <td>Water</td>
-                    <td><input type="number" id="init-water" class="input-dialog" value="0"></td>
+                    <td>Surface</td>
+                    <td>
+                        <select id="init-surface">
+                            <option value="1">Normal</option>
+                            <option value="0.5">Ice</option>
+                            <option value="0.5">Water</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
-                    <td>Ice</td>
-                    <td><input type="number" id="init-ice" class="input-dialog" value="0"></td>
+                    <td>Distance from Preceding Vehicle</td>
+                    <td><input type="number" id="init-distance" class="input-dialog" value="0" min="0"></td>
                 </tr>
                 <tr>
 
                 </tr>
             </table>
             <div id="dialog-footer">
-                <button id="dialog-continue">Continue</button>
+                <button class="btn btn-default" id="dialog-continue">Continue</button>
             </div>
         </div>
     </div>

@@ -38,7 +38,7 @@ var speed = {
     truck: 2
 };
 
-var probabilityPedestrian = 0.1;
+var probabilityPedestrian = 1;
 
 vehiclesCount.forEach(vehicleCount => {
 
@@ -61,5 +61,6 @@ vehiclesCount.forEach(vehicleCount => {
         results.push(cellularAutomata.iterations());
     });
 
-    console.log("Finished simulation with vehicles count ", vehicleCount, ": ",  results.join(","));
+    //console.log("Finished simulation with vehicles count ", vehicleCount, ": ",  results.join(","));
+    console.log(vehicleCount + ": " +  results.join(","));
 });

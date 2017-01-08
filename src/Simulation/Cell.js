@@ -9,7 +9,9 @@ class Cell {
 
     setVehicle(vehicle) {
         if (vehicle && !this.isEmpty()) {
-            throw new Error("Vehicle " + vehicle.toString() + " crashed onto " + this._vehicle.toString());
+            console.log("Vehicle " + vehicle.id() + " crashed onto " + this._vehicle.id());
+            vehicle.crash();
+            this._vehicle.crash();
         }
         this._vehicle = vehicle;
     }
