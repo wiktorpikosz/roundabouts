@@ -48,23 +48,39 @@ let drivingRules = [
         roundaboutBukowe.adherentLanesCount()
     )
 ];
+
+var speed = {
+    car: 5,
+    truck: 2
+};
+
+var ListProbabilityPedestrian = [ 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1 ];
+var itRules = 1;
+
 drivingRules.forEach(drivingRule => {
+    ListProbabilityPedestrian.forEach(probabilityPedestrian => {
+        var results = [];
+        range(0, 20).forEach(() => {
+            let cellularAutomata = new CellularAutomata(
+                roundaboutBukoweCellsMap,
+                cellsNeighbours,
+                drivingRule,
+                roundaboutBukowe.adherentLanesCount() / 2,
+                0.1,
+                500,
+                speed,
+                probabilityPedestrian,
+                1,
+                0
+            );
 
-    var results = [];
-    range(0, 20).forEach(() => {
-        let cellularAutomata = new CellularAutomata(
-            roundaboutBukoweCellsMap,
-            cellsNeighbours,
-            drivingRule,
-            roundaboutBukowe.adherentLanesCount() / 2,
-            0.1
-        );
+            while (!cellularAutomata.hasFinished()) {
+                cellularAutomata.nextIteration();
+            }
+            results.push(cellularAutomata.iterations());
+        });
 
-        while (!cellularAutomata.hasFinished()) {
-            cellularAutomata.nextIteration();
-        }
-        results.push(cellularAutomata.iterations());
+        console.log("Rule: "+ itRules+" PP: "+probabilityPedestrian,  results.join(","));
     });
-
-    console.log("Finished simulation: ",  results.join(","));
+    itRules++;
 });

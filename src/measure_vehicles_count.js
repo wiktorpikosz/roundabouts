@@ -25,10 +25,28 @@ var cellsNeighbours = new CellsNeighbours(
     unitConverter.metersAsCells(roundaboutBukowe.adherentRoadLength())
 );
 
-var drivingRule = DrivingRules.newRules4(
-    roundaboutBukowe.lanesCount(),
-    roundaboutBukowe.adherentLanesCount()
-);
+var ListDrivingRule = [
+    DrivingRules.newRules1(
+        roundaboutBukowe.lanesCount(),
+        roundaboutBukowe.adherentLanesCount()
+    ),
+    DrivingRules.newRules2(
+        roundaboutBukowe.lanesCount(),
+        roundaboutBukowe.adherentLanesCount()
+    ),
+    DrivingRules.newRules3(
+        roundaboutBukowe.lanesCount(),
+        roundaboutBukowe.adherentLanesCount()
+    ),
+    DrivingRules.newRules4(
+        roundaboutBukowe.lanesCount(),
+        roundaboutBukowe.adherentLanesCount()
+    ),
+    DrivingRules.newRules5(
+        roundaboutBukowe.lanesCount(),
+        roundaboutBukowe.adherentLanesCount()
+    ),
+];
 
 
 var vehiclesCount = range(0, 100);
@@ -38,29 +56,40 @@ var speed = {
     truck: 2
 };
 
-var probabilityPedestrian = 1;
+var ListProbabilityPedestrian = [ 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1 ];
+var itRules = 1;
 
-vehiclesCount.forEach(vehicleCount => {
+ListDrivingRule.forEach(drivingRule => {
+    console.log("DriveRule: " + itRules);
 
-    var results = [];
-    range(0, 20).forEach(() => {
-        let cellularAutomata = new CellularAutomata(
-            roundaboutBukoweCellsMap,
-            cellsNeighbours,
-            drivingRule,
-            roundaboutBukowe.adherentLanesCount() / 2,
-            0,
-            vehicleCount,
-            speed,
-            probabilityPedestrian
-        );
+    ListProbabilityPedestrian.forEach(probabilityPedestrian => {
 
-        while (!cellularAutomata.hasFinished()) {
-            cellularAutomata.nextIteration();
-        }
-        results.push(cellularAutomata.iterations());
+        console.log("ProbabilityPedestrian: " + probabilityPedestrian);
+        vehiclesCount.forEach(vehicleCount => {
+            var results = [];
+            range(0, 20).forEach(() => {
+                let cellularAutomata = new CellularAutomata(
+                    roundaboutBukoweCellsMap,
+                    cellsNeighbours,
+                    drivingRule,
+                    roundaboutBukowe.adherentLanesCount() / 2,
+                    0,
+                    vehicleCount,
+                    speed,
+                    probabilityPedestrian,
+                    1,
+                    0
+                );
+
+                while (!cellularAutomata.hasFinished()) {
+                    cellularAutomata.nextIteration();
+                }
+                results.push(cellularAutomata.iterations());
+            });
+
+            //console.log("Finished simulation with vehicles count ", vehicleCount, ": ",  results.join(","));
+            console.log(vehicleCount + ", " +  results.join(","));
+        });
     });
-
-    //console.log("Finished simulation with vehicles count ", vehicleCount, ": ",  results.join(","));
-    console.log(vehicleCount + ": " +  results.join(","));
+    itRules++;
 });

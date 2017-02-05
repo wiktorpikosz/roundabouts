@@ -40,24 +40,37 @@ var truckRatios = [
     0.5, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59,
     0.6, 0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69
 ];
+var ListProbabilityPedestrian = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
+
+var speed = {
+    car: 5,
+    truck: 2
+};
+
 
 truckRatios.forEach(truckRatio => {
+    ListProbabilityPedestrian.forEach(probabilityPedestrian => {
+        var results = [];
+        range(0, 20).forEach(() => {
+            let cellularAutomata = new CellularAutomata(
+                roundaboutBukoweCellsMap,
+                cellsNeighbours,
+                drivingRule,
+                roundaboutBukowe.adherentLanesCount() / 2,
+                truckRatio,
+                500,
+                speed,
+                probabilityPedestrian,
+                1,
+                0
+            );
 
-    var results = [];
-    range(0, 20).forEach(() => {
-        let cellularAutomata = new CellularAutomata(
-            roundaboutBukoweCellsMap,
-            cellsNeighbours,
-            drivingRule,
-            roundaboutBukowe.adherentLanesCount() / 2,
-            truckRatio
-        );
+            while (!cellularAutomata.hasFinished()) {
+                cellularAutomata.nextIteration();
+            }
+            results.push(cellularAutomata.iterations());
+        });
 
-        while (!cellularAutomata.hasFinished()) {
-            cellularAutomata.nextIteration();
-        }
-        results.push(cellularAutomata.iterations());
+        console.log("Ratio " + truckRatio + " PP: "+ probabilityPedestrian +": ", results.join(","));
     });
-
-    console.log("Finished simulation with truck ratio ", truckRatio, ": ",  results.join(","));
 });

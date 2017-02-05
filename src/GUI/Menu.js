@@ -1,3 +1,5 @@
+import CounterEvents from './CounterEvents';
+
 class Menu {
 
     constructor(roundaboutDrawer, cellularAutomata, twojs) {
@@ -16,6 +18,7 @@ class Menu {
         this.counterQueues();
         this._cellularAutomata.nextIteration();
         this.eventVehicle();
+        this.counterEvents();
 
         if (this._cellularAutomata.hasFinished()) {
             console.log("Finished simulation, ", this._cellularAutomata.iterations());
@@ -153,6 +156,15 @@ class Menu {
     changeValueInElement(element, value) {
         element.innerText = value;
     }
+
+    counterEvents(){
+        var collision = CounterEvents.collision();
+        var slip = CounterEvents.slip();
+
+        document.getElementById('event-collision').innerText = collision;
+        document.getElementById('event-slip').innerText = slip;
+    }
+
 }
 
 export default Menu;

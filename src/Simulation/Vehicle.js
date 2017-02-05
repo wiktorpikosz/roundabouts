@@ -1,3 +1,5 @@
+import CounterEvents from '../GUI/CounterEvents';
+
 class Vehicle {
 
     constructor(lengthCells, maxSpeed, maxSpeedWhenTurning, drivingRules, name, surface, distance) {
@@ -79,7 +81,6 @@ class Vehicle {
         }
 
         if (this._passPedestrian()) {
-            //console.log("Stop, crosswalk: " + this._id);
             this._stop();
             return;
         }
@@ -90,7 +91,9 @@ class Vehicle {
                 cellsNeighbours.isApproachingAnyExit(this)
             ) {
                 if (!cellsMap.nothingInFrontOf(this, this._currentSpeed + this._getSafeDistanceRatio())) {
-                    var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
+
+                    var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap) - this._distance;
+
                     this._break(breakUpTo);
                 } else {
                     this._breakBy(1);
@@ -128,7 +131,6 @@ class Vehicle {
         if (cellsMap.nothingInFrontOf(this, this._currentSpeed + this._getSafeDistanceRatio())) {
             if (!this._isApproachingExit(cellsNeighbours) && !this._isApproachingRoundabout(cellsNeighbours)) {
                 this._accelerate();
-                //console.log("Przyspieszam: " + this.id());
             }
         }
     }
@@ -141,6 +143,7 @@ class Vehicle {
             } else {
                 var breakUpTo = this._distanceFromPrecedingVehicle(cellsMap);
             }
+
             this._break(breakUpTo);
         }
     }
@@ -208,15 +211,26 @@ class Vehicle {
     _break(to) {
         if(this._surface < 1) {
             if (this._currentSpeed > 0) {
+
                 var ratio_braking = this._surface;
                 var tmp = Math.floor((this._currentSpeed - to) * ratio_braking + this._deceleration);
+
                 this._deceleration = (this._currentSpeed - to) * ratio_braking;
+
+                if(to != tmp){
+                    CounterEvents.addSlip();
+                }
 
                 if (this._currentSpeed - tmp < 0) {
                     this._currentSpeed = 0;
+                    this._deceleration = 0;
                     return
                 }
                 this._currentSpeed -= tmp;
+
+                if(this._currentSpeed == 0){
+                    this._deceleration = 0;
+                }
             }
         } else{
             this._currentSpeed = to;
@@ -374,6 +388,7 @@ class Vehicle {
             return 1;
         }
     }
+
 }
 
 export default Vehicle;

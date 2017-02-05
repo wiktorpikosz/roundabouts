@@ -1,3 +1,5 @@
+import CounterEvents from '../GUI/CounterEvents';
+
 class Cell {
     constructor(cellId) {
         this._parentLane = null;
@@ -11,6 +13,7 @@ class Cell {
         if (vehicle && !this.isEmpty()) {
             console.log("Vehicle " + vehicle.id() + " crashed onto " + this._vehicle.id());
             vehicle.crash();
+            CounterEvents.addCollision();
             this._vehicle.crash();
         }
         this._vehicle = vehicle;
