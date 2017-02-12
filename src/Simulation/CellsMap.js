@@ -153,6 +153,31 @@ class CellsMap extends Observable {
         return null;
     }
 
+    vehicleOnTheLeftOnRoundaboutArray(vehicle) {
+        var laneIdOnTheLeft = this._roundaboutSpecification.laneIdToTheLeftOf(vehicle.currentLaneId());
+        if (laneIdOnTheLeft == null) {
+            return null;
+        }
+        var laneOnTheLeft = this._lanes.get(laneIdOnTheLeft);
+        var cellOnTheLeftId = this.cellOnRoundaboutOnTheLeftOf(vehicle.frontCell().number());
+        var cellOnTheLeft = laneOnTheLeft.allCells()[cellOnTheLeftId];
+
+        var cellsOnTheLeft = laneOnTheLeft.cellsNextTo(cellOnTheLeft, 3); //TODO: Sprawdzic takze w przód :/
+
+        var vehicles = new Array();
+        var cellWithAVehicle = cellsOnTheLeft.forEach(cell => {
+            if (cell.vehicle()) {
+                vehicles.push(cell.vehicle())
+            }
+            return false;
+        });
+        if (vehicles.length > 0 ) {
+            return vehicles;
+        }
+
+        return null;
+    }
+
     vehiclesOnTheLeft(vehicle, cellsNeighbours) {
         var roundaboutLanes = this._roundaboutSpecification.lanesNumbers(); // [0,1]
         var vehiclesOnTheLeft = new Map();

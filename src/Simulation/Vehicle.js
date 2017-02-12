@@ -85,6 +85,12 @@ class Vehicle {
             return;
         }
 
+        if(this._shouldYieldToVehicleWhenItTurns(cellsMap, cellsNeighbours)){
+            this._stop();
+            //console.log("Stop: " + this.id());
+            return;
+        }
+
         if (!this._drivingRules.roundaboutRules.isOnRightOfWay()) {
             if (
                 this._drivingRules.roundaboutRules.shouldYieldToVehicleOnTheLeft(cellsMap, cellsNeighbours, this) &&
@@ -174,6 +180,11 @@ class Vehicle {
 
     frontCell() {
         return this.currentCells()[0];
+    }
+
+    lastCell() {
+        var size = this._currentCells.length
+        return this.currentCells()[size-1];
     }
 
     lengthCells() {
@@ -389,6 +400,51 @@ class Vehicle {
         }
     }
 
+    isFrontOnDestinationExit(){
+        return this.destinationExit() == this.frontCell().parentLane().direction();
+    }
+
+    vehicleEntersToRoundabouts(){
+        if(this.isTurn()){
+            if(this.frontCell().parentLane().direction() == 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    isTurn(){
+        var lanes = new Map;
+        this.currentCells().forEach(cell =>{
+            lanes.set(cell.parentLane().id(), cell.parentLane());
+        });
+        return (lanes.size != 1);
+    }
+
+    _shouldYieldToVehicleWhenItTurns(cellsMap, cellsNeighbours){
+        var vehicleOnTheLefts = cellsMap.vehicleOnTheLeftOnRoundaboutArray(this);
+        if(!vehicleOnTheLefts){
+            return false;
+        }
+        var flagBoolean = false;
+        vehicleOnTheLefts.forEach(vehicleOnTheLeft =>{
+            // blokada kiedy pojazd z lewego jest podczas skręcania
+            if (
+                vehicleOnTheLeft.destinationExit() == cellsNeighbours.closestExitId(this) &&
+                this.destinationExit() != cellsNeighbours.closestExitId(this) &&
+                vehicleOnTheLeft.isTurn() && vehicleOnTheLeft.isFrontOnDestinationExit()
+            ) {
+                flagBoolean = true;
+                return;
+            }
+            // blokada kiedy pojazd wjeźdzający jest podczas skręcania
+            else if(this.isOnRoundabout() && vehicleOnTheLeft.vehicleEntersToRoundabouts() && vehicleOnTheLeft.isTurn() && !this.isTurn()){
+                flagBoolean = true;
+                return;
+            }
+        });
+        return flagBoolean;
+    }
 }
 
 export default Vehicle;
