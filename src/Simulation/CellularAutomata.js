@@ -33,6 +33,8 @@ class CellularAutomata {
         this._vehicles = [];
         this._probabilityPedestrian = probabilityPedestrian;
         var vehicles = [];
+        this._trafficJam = false;
+        this._trafficJamCounter = 0;
 
         range(0, Math.round(vehicleCount * (1 - truckRatio))).forEach(() => {
             vehicles.push(VehicleFactory.newCar(this._drivingRules, parseInt(speed.car), parseFloat(surface), parseInt(distance)));
@@ -70,6 +72,8 @@ class CellularAutomata {
         this._addVehiclesFromQueue();
         this._cellsMap.notifyAll();
         this._goPedestrian();
+        this._detectTrafficJam();
+        this._removeTrafficJam();
     }
 
     hasFinished() {
@@ -139,6 +143,70 @@ class CellularAutomata {
             road.crossing().randPedestrian(this._probabilityPedestrian, this._cellsMap);
             road.crossing().execute(this._cellsMap);
         })
+    }
+
+    _isTrafficJam() {
+        return (this._trafficJamCounter >= 10);
+    }
+
+    _detectTrafficJam() {
+        if (this._isTrafficJam()) {
+            this._trafficJam = true;
+            return;
+        } else {
+            this._trafficJam = false;
+        }
+
+        var booleanJam = this._vehicles.every(vehicle => {
+            if (vehicle.currentSpeed() != 0) {
+                this._trafficJamCounter = 0;
+                return false;
+            }
+            return true;
+        });
+
+        if (booleanJam) {
+            this._trafficJamCounter++;
+        }
+    }
+
+    _removeTrafficJam() {
+        if (this._trafficJam) {
+            this._vehicles.some(vehicle=> {
+                if (vehicle.currentLaneId() == 0 && this._trafficJamCounter != 0) {
+                    if (this._cellsNeighbours.approachedDestinationExit(vehicle)) {
+                        this._findVehicleAndDelete(vehicle);
+                        this._trafficJam = false;
+                        this._trafficJamCounter = 0;
+                        return true;
+                    }
+                }
+            });
+
+            if (this._trafficJam) {
+                // jeśli nie ma takiego pojazdu, usuń pierwszy który jest obok zjazdu
+                this._vehicles.some(vehicle=> {
+                    if (vehicle.currentLaneId() == 0) {
+                        if (this._cellsNeighbours.approachedAnyExit(vehicle)) {
+                            this._findVehicleAndDelete(vehicle);
+                            this._trafficJam = false;
+                            this._trafficJamCounter = 0;
+                            return true;
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    _findVehicleAndDelete(search) {
+        for (var i = 0; i < this._vehicles.length; i++) {
+            var vehicle = this._vehicles[i];
+            if (Object.is(search, vehicle)) {
+                vehicle.remove();
+                this._vehicles.splice(i, 1);
+            }
+        }
     }
 }
 

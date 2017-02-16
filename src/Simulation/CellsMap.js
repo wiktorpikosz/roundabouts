@@ -162,7 +162,7 @@ class CellsMap extends Observable {
         var cellOnTheLeftId = this.cellOnRoundaboutOnTheLeftOf(vehicle.frontCell().number());
         var cellOnTheLeft = laneOnTheLeft.allCells()[cellOnTheLeftId];
 
-        var cellsOnTheLeft = laneOnTheLeft.cellsNextTo(cellOnTheLeft, 3); //TODO: Sprawdzic takze w przód :/
+        var cellsOnTheLeft = laneOnTheLeft.cellsNextTo(cellOnTheLeft, 2); //TODO: Sprawdzic takze w przód :/
 
         var vehicles = new Array();
         var cellWithAVehicle = cellsOnTheLeft.forEach(cell => {

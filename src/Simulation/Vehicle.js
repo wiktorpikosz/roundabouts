@@ -1,4 +1,5 @@
 import CounterEvents from '../GUI/CounterEvents';
+import {ExitRoadEnd} from './CellsMap.js';
 
 class Vehicle {
 
@@ -60,34 +61,43 @@ class Vehicle {
     }
 
     moveToNextIteration(cellsMap, cellsNeighbours) {
+        var lastFrontCell = this.frontCell();
         if(this._crash){
             if(this._crash_help == 10){
-                this.remove();
-                return;
+                throw new ExitRoadEnd("trash!");
             }
             this._crash_help++;
+            this._resetItStops(lastFrontCell);
             return;
         }
+
+        if(this._currentCells.length == 0){
+            return;
+        }
+
         //Entering roundabout
         if (cellsNeighbours.approachedEntrance(this)) {
             this._onEntrance(cellsMap, cellsNeighbours);
+            this._resetItStops(lastFrontCell);
             return;
         }
 
         //Taking exit
         if (cellsNeighbours.approachedDestinationExit(this)) {
             this._onExit(cellsMap);
+            this._resetItStops(lastFrontCell);
             return;
         }
 
         if (this._passPedestrian()) {
             this._stop();
+            this._resetItStops(lastFrontCell);
             return;
         }
 
         if(this._shouldYieldToVehicleWhenItTurns(cellsMap, cellsNeighbours)){
             this._stop();
-            //console.log("Stop: " + this.id());
+            this._resetItStops(lastFrontCell);
             return;
         }
 
@@ -106,6 +116,7 @@ class Vehicle {
                 }
 
                 cellsMap.moveVehicleBy(this, this._currentSpeed);
+                this._resetItStops(lastFrontCell);
                 return;
             }
 
@@ -114,6 +125,7 @@ class Vehicle {
                 cellsNeighbours.approachedAnyExit(this)
             ) {
                 this._stop();
+                this._resetItStops(lastFrontCell);
                 return;
             }
         }
@@ -127,8 +139,17 @@ class Vehicle {
             }
         }
         cellsMap.moveVehicleBy(this, this._currentSpeed);
+
+        this._resetItStops(lastFrontCell);
     }
 
+    _resetItStops(lastFrontCell){
+        if(Object.is(lastFrontCell, this.frontCell())){
+            if(this._currentSpeed != 0) {
+                this._currentSpeed = 0;
+            }
+        }
+    }
     _currentLine() {
         return this.frontCell().parentLane();
     }
