@@ -49,6 +49,7 @@ var speed = {
 
 
 truckRatios.forEach(truckRatio => {
+    console.log("truckRatio:" + truckRatio);
     ListProbabilityPedestrian.forEach(probabilityPedestrian => {
         var results = [];
         range(0, 20).forEach(() => {
@@ -71,6 +72,6 @@ truckRatios.forEach(truckRatio => {
             results.push(cellularAutomata.iterations());
         });
 
-        console.log("Ratio " + truckRatio + " PP: "+ probabilityPedestrian +": ", results.join(","));
+        console.log("PP: "+ probabilityPedestrian +": ", results.join(","));
     });
 });
