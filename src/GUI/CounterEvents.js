@@ -17,6 +17,11 @@ class CounterEvents {
     static addSlip() {
         this._slip++;
     }
+
+    static reset(){
+        this._collision = 0;
+        this._slip = 0;
+    }
 }
 
 export default CounterEvents;
