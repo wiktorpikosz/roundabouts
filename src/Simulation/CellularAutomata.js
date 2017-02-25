@@ -185,18 +185,27 @@ class CellularAutomata {
 
             if (this._trafficJam) {
                 // jeśli nie ma takiego pojazdu, usuń pierwszy który jest obok zjazdu
-                this._vehicles.some(vehicle=> {
-                    if (vehicle.currentLaneId() == 0) {
-                        if (this._cellsNeighbours.approachedAnyExit(vehicle)) {
-                            this._findVehicleAndDelete(vehicle);
-                            this._trafficJam = false;
-                            this._trafficJamCounter = 0;
-                            return true;
-                        }
-                    }
-                });
+                this._searchVehicleApproachedAnyExit(0);
+            }
+
+            if (this._trafficJam) {
+                // jeśli nie ma takiego pojazdu, usuń pierwszy który jest obok zjazdu na wew. pasie
+                this._searchVehicleApproachedAnyExit(1);
             }
         }
+    }
+
+    _searchVehicleApproachedAnyExit(line) {
+        this._vehicles.some(vehicle=> {
+            if (vehicle.currentLaneId() == line) {
+                if (this._cellsNeighbours.approachedAnyExit(vehicle)) {
+                    this._findVehicleAndDelete(vehicle);
+                    this._trafficJam = false;
+                    this._trafficJamCounter = 0;
+                    return true;
+                }
+            }
+        });
     }
 
     _findVehicleAndDelete(search) {

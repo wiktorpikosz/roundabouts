@@ -88,7 +88,5 @@ conditions.forEach(condition => {
             // iterations, collision, slip
             console.log(cellularAutomata.iterations(), CounterEvents.collision(), CounterEvents.slip());
         });
-
-        //console.log("PP: "+ probabilityPedestrian +": ", results.join(","));
     });
 });
