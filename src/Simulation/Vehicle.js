@@ -412,6 +412,9 @@ class Vehicle {
         this._crash = true;
     }
 
+    isCrash(){
+        return this._crash;
+    }
     _getSafeDistanceRatio(){
         if(this._distance > 1){
             return this._distance;

@@ -173,7 +173,7 @@ class CellularAutomata {
     _removeTrafficJam() {
         if (this._trafficJam) {
             this._vehicles.some(vehicle=> {
-                if (vehicle.currentLaneId() == 0 && this._trafficJamCounter != 0) {
+                if (vehicle.currentLaneId() == 0 && this._trafficJamCounter != 0 && !vehicle.isCrash()) {
                     if (this._cellsNeighbours.approachedDestinationExit(vehicle)) {
                         this._findVehicleAndDelete(vehicle);
                         this._trafficJam = false;
@@ -196,16 +196,21 @@ class CellularAutomata {
     }
 
     _searchVehicleApproachedAnyExit(line) {
-        this._vehicles.some(vehicle=> {
-            if (vehicle.currentLaneId() == line) {
-                if (this._cellsNeighbours.approachedAnyExit(vehicle)) {
-                    this._findVehicleAndDelete(vehicle);
-                    this._trafficJam = false;
-                    this._trafficJamCounter = 0;
-                    return true;
+        for(var i = 1; i < 5; i++) {
+            this._vehicles.some(vehicle=> {
+                if (vehicle.currentLaneId() == line) {
+                    if (this._cellsNeighbours.approachedAnyExitDistance(vehicle, i) && !vehicle.isCrash()) {
+                        this._findVehicleAndDelete(vehicle);
+                        this._trafficJam = false;
+                        this._trafficJamCounter = 0;
+                        return true;
+                    }
                 }
+            });
+            if(!this._trafficJam){
+                break;
             }
-        });
+        }
     }
 
     _findVehicleAndDelete(search) {

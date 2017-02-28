@@ -105,6 +105,19 @@ class CellsNeighbours  {
         return approaches.some(approach => {return approach});
     }
 
+    approachedAnyExitDistance(vehicle, distance) {
+        var approaches = Array.from(this._exits[vehicle.currentLaneId()].values(), exitsCells => {
+            var exitApproaches = Array.from(exitsCells, exitCell => {
+                if (Math.abs(exitCell - vehicle.frontCell().number()) <= distance) {
+                    return true;
+                }
+                return false;
+            });
+            return exitApproaches.some(approach=> {return approach});
+        });
+        return approaches.some(approach => {return approach});
+    }
+
     approachedEntrance(vehicle) {
         return vehicle.frontCell().parentLane().isEntranceLane() &&
             vehicle.frontCell().number() == this._maxCellIdOnEntrance;
