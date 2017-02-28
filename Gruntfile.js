@@ -12,7 +12,8 @@ module.exports = function(grunt) {
                     "src/cli_measure_rules.js": "src/measure_rules.js",
                     "src/cli_measure_truck_ratio.js": "src/measure_truck_ratio.js",
                     "src/cli_measure_vehicles_count.js": "src/measure_vehicles_count.js",
-                    "src/cli_measure_vehicles_incident.js": "src/measure_vehicles_incident.js"
+                    "src/cli_measure_vehicles_incident.js": "src/measure_vehicles_incident.js",
+                    "src/cli_measure_rules_incident.js": "src/measure_rules_incident.js"
                 }
             }
         },

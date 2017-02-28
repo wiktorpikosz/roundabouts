@@ -59,7 +59,8 @@ var speed = {
 
 
 conditions.forEach(condition => {
-    console.log("Condition:" + condition.distance);
+    console.log("Distance:" + condition.distance);
+
     ListProbabilityPedestrian.forEach(probabilityPedestrian => {
         console.log("PP:" + probabilityPedestrian);
         var results = [];
