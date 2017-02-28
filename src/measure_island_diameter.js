@@ -21,42 +21,59 @@ let roundaboutSpecifications = Array.from(range(40, 40), x => {
             });
     });
 
-roundaboutSpecifications.forEach(roundaboutSpecification => {
-    var drivingRule = DrivingRules.newRules1(
-        roundaboutSpecification.lanesCount(),
-        roundaboutSpecification.adherentLanesCount()
-    );
+var speed = {
+    car: 5,
+    truck: 2
+};
 
-    let unitConverter = new UnitConverter(
-        roundaboutSpecification.roundaboutDiameter() + roundaboutSpecification.adherentRoadLength() * 2,
-        Math.min(200, 200)
-    );
+var ListProbabilityPedestrian = [ 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1 ];
 
-    let roundaboutCellsMap = new CellsMap(
-        roundaboutSpecification,
-        unitConverter
-    );
+ListProbabilityPedestrian.forEach(probabilityPedestrian => {
+    console.log("PP: " + probabilityPedestrian);
 
-    var cellsNeighbours = new CellsNeighbours(
-        roundaboutCellsMap.cellsCountsOnInnerRoadLanes(),
-        roundaboutSpecification.adherentLanesCount() / 2,
-        unitConverter.metersAsCells(roundaboutSpecification.adherentRoadLength())
-    );
-
-    var results = [];
-    range(0, 20).forEach(() => {
-        let cellularAutomata = new CellularAutomata(
-            roundaboutCellsMap,
-            cellsNeighbours,
-            drivingRule,
-            roundaboutSpecification.adherentLanesCount() / 2
+    roundaboutSpecifications.forEach(roundaboutSpecification => {
+        var drivingRule = DrivingRules.newRules1(
+            roundaboutSpecification.lanesCount(),
+            roundaboutSpecification.adherentLanesCount()
         );
 
-        while (!cellularAutomata.hasFinished()) {
-            cellularAutomata.nextIteration();
-        }
-        results.push(cellularAutomata.iterations());
-    });
+        let unitConverter = new UnitConverter(
+            roundaboutSpecification.roundaboutDiameter() + roundaboutSpecification.adherentRoadLength() * 2,
+            Math.min(200, 200)
+        );
 
-    console.log("Finished simulation ", roundaboutSpecification.islandRadius() ," : ",  results.join(","));
+        let roundaboutCellsMap = new CellsMap(
+            roundaboutSpecification,
+            unitConverter
+        );
+
+        var cellsNeighbours = new CellsNeighbours(
+            roundaboutCellsMap.cellsCountsOnInnerRoadLanes(),
+            roundaboutSpecification.adherentLanesCount() / 2,
+            unitConverter.metersAsCells(roundaboutSpecification.adherentRoadLength())
+        );
+
+        var results = [];
+        range(0, 20).forEach(() => {
+            let cellularAutomata = new CellularAutomata(
+                roundaboutCellsMap,
+                cellsNeighbours,
+                drivingRule,
+                roundaboutSpecification.adherentLanesCount() / 2,
+                0,
+                500,
+                speed,
+                probabilityPedestrian,
+                1,
+                0
+            );
+
+            while (!cellularAutomata.hasFinished()) {
+                cellularAutomata.nextIteration();
+            }
+            results.push(cellularAutomata.iterations());
+        });
+
+        console.log("Finished simulation \t", roundaboutSpecification.islandRadius(), " \t ", results.join(","));
+    });
 });
